@@ -116,13 +116,107 @@ const PaymentPage = () => {
     eventImage: event.image,
     eventDate: event.date,
     amount: totalPrice,
-    currency: 'USD'
+    currency: 'INR' // Changed to INR for Razorpay (or use 'USD' if needed)
   }
 
+  const loadRazorpay = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => {
+        resolve(true);
+      };
+      script.onerror = () => {
+        resolve(false);
+      };
+      document.body.appendChild(script);
+    });
+  };
+
   const handlePayment = async () => {
-    const requestRes = await axios.post('/order', paymentInfo)
-    window.location.replace(requestRes.data.url)
-    // //console.log(requestRes);
+    try {
+      // Load Razorpay script
+      const res = await loadRazorpay();
+      if (!res) {
+        Swal.fire({
+          title: "Error!",
+          text: "Razorpay SDK failed to load. Please check your internet connection.",
+          icon: "error"
+        });
+        return;
+      }
+
+      // Create order on backend
+      const orderRes = await axios.post('/order', paymentInfo);
+      const { order_id, amount, currency, key_id, tran_id } = orderRes.data;
+
+      // Razorpay checkout options
+      const options = {
+        key: key_id,
+        amount: amount,
+        currency: currency,
+        name: "DreamCraft Events",
+        description: event.title,
+        image: event.image,
+        order_id: order_id,
+        handler: async function (response) {
+          try {
+            // Verify payment on backend
+            const verifyRes = await axios.post('/payment/verify', {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              tran_id: tran_id
+            });
+
+            if (verifyRes.data.success) {
+              // Redirect to success page
+              window.location.href = `/payment/success/${tran_id}`;
+            } else {
+              Swal.fire({
+                title: "Payment Verification Failed!",
+                text: "Please contact support.",
+                icon: "error"
+              });
+            }
+          } catch (error) {
+            console.error('Payment verification error:', error);
+            Swal.fire({
+              title: "Error!",
+              text: "Payment verification failed. Please contact support.",
+              icon: "error"
+            });
+          }
+        },
+        prefill: {
+          name: user?.name,
+          email: user?.email,
+          contact: user?.phone || ''
+        },
+        theme: {
+          color: "#BE123C" // Rose color matching your theme
+        },
+        modal: {
+          ondismiss: function() {
+            Swal.fire({
+              title: "Payment Cancelled",
+              text: "You have cancelled the payment.",
+              icon: "warning"
+            });
+          }
+        }
+      };
+
+      const paymentObject = new window.Razorpay(options);
+      paymentObject.open();
+    } catch (error) {
+      console.error('Payment error:', error);
+      Swal.fire({
+        title: "Error!",
+        text: "Failed to initiate payment. Please try again.",
+        icon: "error"
+      });
+    }
   }
 
 

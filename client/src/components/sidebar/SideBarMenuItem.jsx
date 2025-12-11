@@ -5,6 +5,10 @@ import { NavLink } from "react-router-dom";
 
 const SideBarMenuItem = ({ menu }) => {
     const { name, icon, path } = menu;
+    
+    // Get the icon component, fallback to a default icon if not found
+    const IconComponent = Lucide[icon] || Lucide.LuCircle;
+    
     return (
         <li className="py-0.5">
             <NavLink
@@ -13,7 +17,7 @@ const SideBarMenuItem = ({ menu }) => {
                     isActive ? "sideLinkActive" : "sideLink"
                 }
             >
-                {createElement(Lucide[icon])}
+                {createElement(IconComponent)}
                 {name}
             </NavLink>
         </li>

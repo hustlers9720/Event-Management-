@@ -5,7 +5,7 @@ import eventRouter from './routes/events.js';
 import userRoute from './routes/users.js';
 import shopRouter from './routes/products.js'
 import requestRouter from './routes/organizerRequest/index.js'
-import paymentRouter from './routes/sslcommerz/payment.js';
+import paymentRouter from './routes/razorpay/payment.js';
 import globalErrorHandler from "./utils/globalErrorHandler.js";
 import ordersRouter from './routes/productOrders/index.js'
 import contactRouter from './routes/Contact.js'
