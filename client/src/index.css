@@ -1,0 +1,111 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    html {
+        @apply scroll-smooth;
+    }
+}
+
+@layer components {
+    .navbar-active .hamburger div:first-child {
+        @apply rotate-45 translate-y-1.5;
+    }
+    .navbar-active .hamburger div:last-child {
+        @apply -rotate-45 -translate-y-1;
+    }
+    .navbar-active div:first-child div:first-child div:last-child {
+        @apply block lg:flex;
+    }
+    .sideLink {
+        @apply flex items-center gap-2 hover:no-underline text-neutral-400 py-2 px-1.5;
+    }
+    .sideLinkActive {
+        @apply flex items-center gap-2 hover:no-underline bg-[#1E293B] rounded text-white py-2 px-1.5;
+    }
+    .dropdownSideBar {
+        @apply relative flex items-center gap-2 hover:no-underline rounded text-neutral-400 py-2 px-1.5 w-full;
+    }
+
+    .animate-updown {
+        animation-name: animate-updownAnim;
+        animation-duration: 2s;
+        animation-iteration-count: infinite;
+        animation-direction: alternate-reverse;
+    }
+
+    @keyframes animate-updownAnim {
+        from {
+            transform: translateY(-20px);
+        }
+        to {
+            transform: translateY(20px);
+        }
+    }
+}
+
+.button-reciept {
+    animation-name: animate-updownAnim;
+    animation-duration: 1.5s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate-reverse;
+}
+
+@keyframes animate-updownAnim {
+    from {
+        transform: translateY(-5px);
+    }
+    to {
+        transform: translateY(4px);
+    }
+}
+
+.custom-scroll {
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+.custom-scroll::-webkit-scrollbar {
+    width: 0.5rem;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+    background: #3c485a;
+    border-radius: 1rem;
+    border: 1px solid #3c485a;
+    box-shadow: inset 0 0 0 1px #3c485a;
+    box-sizing: content-box;
+    transition: background 0.15s ease-in-out, border-color 0.15s ease-in-out,
+        box-shadow 0.15s ease-in-out;
+}
+
+.active {
+    @apply text-primary border border-primary;
+}
+
+.ti-list-group{
+    margin-top: -1px;
+    display: inline-flex;
+    align-items: center;
+    column-gap: 0.5rem;
+    border-width: 1px;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+  }
+  .ti-list-group:first-child{
+    margin-top: 0px;
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+  }
+  .ti-list-group:last-child{
+    border-bottom-right-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+  }
